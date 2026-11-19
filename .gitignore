@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.hypothesis/
+*.duckdb
+*.egg-info/
+.env
+.streamlit/secrets.toml
+.DS_Store
+# NOTE: never ignore .kiro (hackathon requirement, checked in CI)

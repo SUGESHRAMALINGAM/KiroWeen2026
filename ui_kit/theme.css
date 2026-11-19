@@ -1,0 +1,114 @@
+/* DE Bro Code: Zombie Edition. Applied only when Plain Mode is off.
+   Colours: bone #ece8d8 on the panel is about 14:1, pumpkin #ff9f43 about 8:1, red #ff6b6b about 6:1. The variable keeps the name --zh-green for the accent. */
+:root {
+  --zh-bg: #120d1a; --zh-panel: #1c1527; --zh-panel2: #251b33; --zh-border: #3b2d52;
+  --zh-bone: #ece8d8; --zh-muted: #b4bfb0; --zh-green: #ff9f43; --zh-red: #ff6b6b;
+  --zh-amber: #ffb74d; --zh-purple: #c9a7ff;
+}
+
+h1, h2, h3, .zh-serif { font-family: Georgia, "Times New Roman", serif; letter-spacing: 0.01em; }
+
+[data-testid="stSidebar"] { border-right: 1px solid var(--zh-border); }
+
+/* Streamlit metrics become cards */
+[data-testid="stMetric"] {
+  background: var(--zh-panel); border: 1px solid var(--zh-border); border-radius: 14px; padding: 12px 16px;
+}
+
+/* Buttons */
+.stButton > button, .stDownloadButton > button {
+  border: 1px solid var(--zh-green); background: var(--zh-panel); color: var(--zh-bone);
+  border-radius: 10px; transition: box-shadow .2s ease, transform .2s ease;
+}
+.stButton > button:hover, .stDownloadButton > button:hover { box-shadow: 0 0 14px rgba(255,159,67,.45); color: var(--zh-green); }
+.stButton > button:focus-visible, .stDownloadButton > button:focus-visible { outline: 3px solid var(--zh-amber); }
+
+/* Tabs */
+button[data-baseweb="tab"] { font-size: 1.02rem; }
+button[data-baseweb="tab"][aria-selected="true"] { color: var(--zh-green); }
+
+[data-testid="stExpander"] { border: 1px solid var(--zh-border); border-radius: 12px; background: var(--zh-panel); }
+
+/* Hero */
+.zh-hero {
+  background: radial-gradient(900px 260px at 15% 0%, rgba(255,159,67,.20), transparent 60%),
+              radial-gradient(700px 240px at 100% 100%, rgba(255,107,107,.12), transparent 60%), var(--zh-panel);
+  border: 1px solid var(--zh-border); border-radius: 20px; padding: 28px 32px; margin-bottom: 18px; color: var(--zh-bone);
+}
+.zh-hero h1 { margin: 0 0 6px 0; font-size: 2.6rem; color: var(--zh-bone) !important; }
+.zh-hero h1 span { color: var(--zh-green) !important; }
+.zh-hero p { color: var(--zh-muted); font-size: 1.08rem; max-width: 46rem; margin: 0 0 14px 0; }
+.zh-strip { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+
+.zh-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; margin: 6px 0 18px; }
+.zh-step { background: var(--zh-panel); border: 1px solid var(--zh-border); border-radius: 14px; padding: 14px 16px; color: var(--zh-bone); }
+.zh-step b { color: var(--zh-green); font-family: Georgia, serif; font-size: 1.3rem; margin-right: 6px; }
+.zh-step span { color: var(--zh-muted); display: block; margin-top: 4px; }
+
+/* Verdict */
+.zh-verdict {
+  display: flex; align-items: center; gap: 22px; flex-wrap: wrap; background: var(--zh-panel);
+  border: 1px solid var(--zh-border); border-left-width: 6px; border-radius: 16px; padding: 18px 22px; margin: 6px 0 16px; color: var(--zh-bone);
+}
+.zh-verdict.clean { border-left-color: #5fd38d; }
+.zh-verdict.mild { border-left-color: var(--zh-amber); }
+.zh-verdict.attack { border-left-color: var(--zh-red); }
+.zh-verdict h2 { margin: 0 0 4px 0; font-size: 1.6rem; color: var(--zh-bone) !important; }
+.zh-verdict p { margin: 0; color: var(--zh-muted); font-size: 1.05rem; }
+.zh-ring-bg { stroke: #33274a; } .zh-ring-fg { stroke-linecap: round; transition: stroke-dasharray .8s ease; }
+.zh-ring-text { fill: var(--zh-bone); font-family: Georgia, serif; font-size: 25px; font-weight: 700; }
+
+/* Zombie cards */
+.zh-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 8px 0 18px; }
+.zh-card { background: var(--zh-panel); border: 1px solid var(--zh-border); border-radius: 16px; padding: 14px; color: var(--zh-bone); }
+.zh-card.hit { border-color: var(--zh-red); box-shadow: inset 0 0 22px rgba(255,107,107,.10); }
+.zh-card.none { opacity: .72; }
+.zh-card h4 { margin: 8px 0 0 0; font-family: Georgia, serif; font-size: 1.05rem; color: var(--zh-bone) !important; }
+.zh-card .n { font-family: Georgia, serif; font-size: 2rem; line-height: 1.1; color: var(--zh-bone); }
+.zh-card small { display: block; color: var(--zh-muted); margin-top: 4px; line-height: 1.35; }
+.zh-sprite { display: block; }
+
+/* Finding cards and badges */
+.zh-finding { display: flex; gap: 14px; align-items: center; background: var(--zh-panel); border: 1px solid var(--zh-border);
+  border-radius: 14px; padding: 10px 16px; margin-bottom: 8px; color: var(--zh-bone); }
+.zh-finding p { margin: 0; } .zh-finding .meta { color: var(--zh-muted); font-size: .92rem; }
+.zh-badge { display: inline-block; padding: 1px 10px; border-radius: 999px; font-size: .8rem; font-weight: 700; margin-right: 8px; }
+.zh-badge.high { background: var(--zh-red); color: #240606; }
+.zh-badge.medium { background: var(--zh-amber); color: #241600; }
+.zh-badge.low { background: #5fd38d; color: #06210f; }
+
+/* Overlay: pure CSS, dismiss with the checkbox label. Hidden for reduced-motion users (a banner is shown instead). */
+.zh-overlay-toggle { position: fixed; opacity: 0; pointer-events: none; }
+.zh-overlay {
+  position: fixed; inset: 0; z-index: 2147483000; display: flex; align-items: center; justify-content: center; text-align: center;
+  background: radial-gradient(ellipse at center, rgba(70,6,6,.93) 0%, rgba(8,0,0,.97) 75%); color: var(--zh-bone); padding: 24px;
+}
+.zh-overlay-toggle:checked ~ .zh-overlay { display: none; }
+.zh-overlay h2 { font-family: Georgia, serif; font-size: clamp(2rem, 6vw, 4rem); color: #ff6b6b !important; margin: 8px 0; }
+.zh-overlay p { font-size: 1.2rem; color: var(--zh-bone); margin: 4px 0; }
+.zh-overlay .row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin: 18px 0; }
+.zh-overlay .z { background: rgba(0,0,0,.45); border: 1px solid #5a1a1a; border-radius: 14px; padding: 10px 14px; min-width: 120px; }
+.zh-overlay .z b { display: block; font-size: 1.6rem; font-family: Georgia, serif; }
+.zh-overlay label {
+  display: inline-block; margin-top: 12px; cursor: pointer; padding: 12px 28px; border-radius: 12px; font-weight: 700;
+  background: var(--zh-green); color: #0b1a05; font-size: 1.1rem;
+}
+.zh-overlay label:hover, .zh-overlay-toggle:focus-visible ~ .zh-overlay label { outline: 3px solid var(--zh-amber); }
+
+@media (prefers-reduced-motion: reduce) { .zh-overlay, .zh-overlay-toggle { display: none !important; } }
+
+/* Motion only for users who have not asked to reduce it */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes zh-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+  @keyframes zh-pulse { 0%, 100% { box-shadow: 0 0 0 rgba(255,107,107,0); } 50% { box-shadow: 0 0 26px rgba(255,107,107,.45); } }
+  @keyframes zh-flicker { 0%, 92%, 100% { opacity: 1; } 94% { opacity: .55; } 96% { opacity: 1; } 98% { opacity: .7; } }
+  @keyframes zh-in { from { opacity: 0; transform: scale(1.04); } to { opacity: 1; transform: scale(1); } }
+  @keyframes zh-away { to { opacity: 0; visibility: hidden; } }
+  .zh-strip .zh-sprite { animation: zh-bob 3.2s ease-in-out infinite; }
+  .zh-strip .zh-sprite:nth-child(2) { animation-delay: .4s; } .zh-strip .zh-sprite:nth-child(3) { animation-delay: .8s; }
+  .zh-strip .zh-sprite:nth-child(4) { animation-delay: 1.2s; } .zh-strip .zh-sprite:nth-child(5) { animation-delay: 1.6s; }
+  .zh-hero h1 { animation: zh-flicker 7s linear infinite; }
+  .zh-verdict.attack { animation: zh-pulse 2.4s ease-in-out infinite; }
+  .zh-card:hover { transform: translateY(-3px); transition: transform .2s ease; }
+  .zh-overlay { animation: zh-in .35s ease-out, zh-away .6s ease 14s forwards; }
+}
