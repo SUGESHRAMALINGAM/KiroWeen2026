@@ -10,20 +10,25 @@ Each item is ticked when it is done.
 - [x] Task 5: Automatic checks + custom rules
 - [x] Task 6: Zombie UI (theme, overlay, Plain Mode)
 - [x] Task 7: SQL Autopsy (explain, problems, lineage)
+- [x] SQL files, stored procedures and DuckDB checks in SQL Autopsy
+- [x] CI fix (pytest.ini), CI green on GitHub
 
-## Now: SQL files, stored procedures and DuckDB checks (base build)
-- [x] 1. Update this list
-- [x] 2. Analyse whole scripts (many statements)
-- [x] 3. Stored procedure bodies (best effort)
-- [x] 4. Upload `.sql` files in SQL Autopsy
-- [x] 5. Safe DuckDB sandbox (read-only, 100 rows, 5 s)
-- [x] 6. Check SQL against the real tables (unknown tables/columns, row explosion)
-- [x] 7. Data panel and preview in SQL Autopsy
-- [x] 8. Wrap up: spec, README, full test run
+## Now: finish everything before the final step
+- [x] 1. Security: lock Zombie Hunter's database (no file access, memory cap) and stop slow queries after 10 s
+- [x] 2. Pin library versions in requirements.txt (the versions we tested)
+- [x] 3. Docs download (BRD Task 8, FR-19): Markdown + Mermaid diagram from SQL Autopsy, plus a command-line script
+- [x] 4. MCP server (FR-24): tools `profile_csv` and `analyze_sql`, with config added but switched off until you approve
+- [x] 5. Specs + README updated, full test run
+- [ ] 6. Kiro hooks (FR-23): needs you to open the `KiroWeen2026` folder as the workspace first (see notes)
 
-## After this
-- [ ] Lean docs download (Markdown + Mermaid), no LLM
-- [ ] Task 9: Rewrite check + HR / Finance / Marketing sample packs (cut first if short on time)
-- [ ] Task 10: Kiro hooks + MCP server
-- [ ] Task 11: Deploy, README, demo video, Devpost
-- [ ] Future: Databricks / BigQuery connectors through the same `Connector` interface
+## Cut on purpose
+- Task 9: rewrite verification + HR / Finance / Marketing packs (the plan says cut this first)
+- Optional LLM wording (the plan says cut it; the app works without a key)
+
+## Final (after the list above)
+- [ ] You push to GitHub (I give the exact commands, you run them)
+- [ ] You deploy both apps on Streamlit Community Cloud
+- [ ] README gets the live links, then demo video and Devpost write-up
+
+## Future
+- Databricks / BigQuery connectors through the same `Connector` interface

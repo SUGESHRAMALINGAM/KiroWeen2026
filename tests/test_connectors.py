@@ -91,3 +91,30 @@ def test_concurrent_use_from_many_threads(tmp_path):
     with ThreadPoolExecutor(8) as ex:
         results = list(ex.map(work, range(200)))
     assert all(r == (["t"], 1, 5, 19900) for r in results)
+
+
+# ---------------------------------------------------------------- public-app lock (Zombie Hunter)
+
+def test_lock_blocks_files_and_settings(tmp_path):
+    con = CsvConnector()
+    con.load_csv(write(tmp_path, "t.csv", "x\n1\n2\n"))
+    con.lock(timeout_s=5)
+    assert con.locked
+    assert con.query("SELECT SUM(x) AS s FROM t")["s"][0] == 3   # normal queries still work
+    secret = write(tmp_path, "secret.csv", "pw\nhunter2\n")
+    for sql in [f"SELECT * FROM read_csv('{secret.as_posix()}')", f"SELECT * FROM '{secret.as_posix()}'",
+                "COPY t TO 'out.csv'", "SET enable_external_access = true", "INSTALL httpfs"]:
+        with pytest.raises(Exception):
+            con.query(sql)
+
+
+def test_slow_query_is_stopped(tmp_path):
+    import time
+    from core.connectors import QueryTimeout
+    con = CsvConnector()
+    con.load_csv(write(tmp_path, "t.csv", "x\n" + "\n".join(str(i) for i in range(300)) + "\n"))
+    con.lock(timeout_s=1)
+    t0 = time.time()
+    with pytest.raises(QueryTimeout):
+        con.query("SELECT COUNT(*) FROM t a, t b, t c, t d, t e")
+    assert time.time() - t0 < 5

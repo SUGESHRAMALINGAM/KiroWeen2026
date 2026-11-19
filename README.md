@@ -5,7 +5,7 @@ A data engineer's AI teammate for Kiroween 2026 (Skeleton Crew). One shared core
 - **Zombie Hunter**: profile CSVs, find data "zombies", generate and run checks.
 - **SQL Autopsy**: explain, lint and trace lineage for SQL, and generate ETL docs.
 
-Status: Tasks 1-7 done, plus SQL files, stored procedures and DuckDB checks in SQL Autopsy. Docs download is next. See `TODO.md`.
+Status: all planned features are built (see `TODO.md`). Live links come after deployment.
 
 ## Run
 
@@ -36,7 +36,19 @@ pytest -q
 - Previews return at most 100 rows and stop after 5 seconds. Uploads: CSV up to 50 MB (10 files), `.sql` up to 1 MB.
 - Files and SQL stay in your browser session. Nothing is stored or logged.
 
-### Later
+- **Download documentation:** a Markdown file with a summary, a Mermaid data-flow diagram, and every statement explained. From the command line: `py scripts/gen_docs.py path/to/file.sql --dialect mysql` (writes to `docs/generated/`).
+
+## Security on the public apps
+- Both apps lock their DuckDB database right after loading your CSVs: no file or URL access, settings frozen, 512 MB memory, 2 threads.
+- Zombie Hunter stops any check or custom rule after 10 seconds. SQL Autopsy previews stop after 5 seconds and return at most 100 rows.
+- Nothing you upload or paste is stored or logged.
+
+## Kiro
+- **Specs:** one per task in `.kiro/specs/`. **Steering:** `.kiro/steering/` (product, tech, structure).
+- **MCP server:** `mcp_server/server.py` with tools `profile_csv` and `analyze_sql`, registered in `.kiro/settings/mcp.json`. It ships switched off (`"disabled": true`); set it to `false` to let Kiro call it. It runs locally over stdio and never executes SQL.
+- **Property-based tests:** Hypothesis checks the profiler, the generated checks, custom rules and the SQL parser against plain Python.
+
+## Later
 Databricks and BigQuery connections, through the same `Connector` interface.
 
 ## License

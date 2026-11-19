@@ -29,12 +29,6 @@ MAX_CSV_BYTES = 50 * 1024 * 1024
 MAX_FILES = 10
 PREVIEW_ROWS = 100
 TIMEOUT_S = 5.0
-LOCK_SETTINGS = (
-    "SET enable_external_access = false",
-    "SET memory_limit = '512MB'",
-    "SET threads = 2",
-    "SET lock_configuration = true",  # must be last
-)
 _ANSI = re.compile(r"\x1b\[[0-9;]*m")
 _FORBIDDEN = tuple(getattr(exp, n) for n in (
     "Insert", "Update", "Delete", "Merge", "Create", "Drop", "Alter", "Command", "Copy", "Attach", "Detach",
@@ -96,9 +90,7 @@ class Sandbox:
         self._con = connector
         self.table_rows = table_rows
         self.notes = notes          # plain messages from loading (rejected rows, skipped files)
-        cur = connector.cursor()
-        for s in LOCK_SETTINGS:
-            cur.execute(s)
+        connector.lock()            # previews use their own 5 s timer below
 
     # ---- construction
     @classmethod

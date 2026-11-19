@@ -226,3 +226,12 @@ def test_examples_for_unique_show_the_repeated_key():
     con = load_rows([("A", 1), ("A", 2), ("B", 3)], ["k", "n"])
     check = build_custom_check(con, "t", CustomSpec("unique", ("k",)))
     assert list(failing_examples(con, check)["k"]) == ["A"]
+
+def test_heavy_custom_rule_is_stopped_not_crashing():
+    con = retail()
+    con.lock(timeout_s=1)
+    heavy = CustomSpec("condition", condition=(
+        "(SELECT COUNT(*) FROM orders a, orders b, orders c, orders d) > 0"))
+    check = build_custom_check(con, "orders", heavy)   # EXPLAIN only, so building is instant
+    res = run_checks(con, [check])[0]
+    assert not res.passed and "took longer than 1 seconds" in res.error

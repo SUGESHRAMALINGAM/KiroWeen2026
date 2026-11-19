@@ -9,6 +9,7 @@ import streamlit as st
 
 from core.sandbox import Sandbox, row_explosion_issue
 from core.sql_analyzer import DIALECTS, analyze, lineage_dot
+from core.docgen import script_doc
 from core.sql_script import analyze_script
 from ui_kit import inject_theme, issue_html, page_hero_html
 
@@ -199,6 +200,14 @@ if len(statements) > 1 or script.procedures or script.all_unreadable or syntax:
             st.dataframe(pd.DataFrame([{"Line": u.line, "In": u.procedure or "-",
                                         "Text": " ".join(u.sql.split())[:80], "Why": u.message}
                                        for u in script.all_unreadable]), hide_index=True, width="stretch")
+
+
+doc_name = Path(source_name).stem if source_name else "sql"
+st.download_button(f"{icon('📄')}Download documentation (Markdown)",
+                   script_doc(script, source_name or "SQL documentation"),
+                   f"{doc_name}_documentation.md", "text/markdown", key="download_doc",
+                   help="Summary, a data-flow diagram (Mermaid), and every statement explained. "
+                        "Opens in GitHub, VS Code or any Markdown viewer.")
 
 
 def label_for(s) -> str:

@@ -239,3 +239,12 @@ def test_autopsy_shows_syntax_problem_for_extra_semicolons():
     at = autopsy(sql="SELECT 1 FROM a;\n;;;\nSELECT 2 FROM b;")
     assert any("1 syntax problem" in e.value for e in at.error)
     assert "Line 2" in " ".join(m.value for m in at.markdown)
+
+def test_zombie_hunter_database_is_locked():
+    at = fresh(sample="Retail (mostly healthy)")
+    assert at.session_state["con"].locked
+
+def test_autopsy_has_docs_download():
+    at = autopsy(example="Script with a stored procedure (SQL Server)", dialect="tsql")
+    btn = [b for b in at.get("download_button") if "Download documentation" in b.proto.label]
+    assert btn and not at.exception

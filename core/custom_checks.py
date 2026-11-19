@@ -300,7 +300,7 @@ def build_custom_check(con: Connector, table: str, spec: CustomSpec) -> Check:
         raise CustomCheckError(f"Unknown table '{table}'.") from None
     desc, sql, extra = _BUILDERS[spec.kind](con, quote_ident(table), table, spec, schema)
     try:
-        con.query(sql)  # dry run: catches typos in column names, bad types and so on
+        con.query("EXPLAIN " + sql)  # dry run without executing: catches unknown columns, bad types...
     except Exception as e:
         raise CustomCheckError(f"This check could not run: {_clean(e)}") from None
     label = ", ".join(spec.columns) or "(rule)"

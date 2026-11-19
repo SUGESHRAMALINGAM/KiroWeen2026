@@ -1,8 +1,9 @@
-streamlit>=1.50
-duckdb>=1.1
-sqlglot>=25.0
-pandas>=2.2
-PyYAML>=6.0
-mcp>=1.0
-pytest>=8.0
-hypothesis>=6.100
+# Pinned to the versions the tests pass with (local and GitHub CI).
+streamlit==1.67.0
+duckdb==2.0.0
+sqlglot==30.33.0
+pandas==3.1.1
+PyYAML==6.0.3
+mcp==2.3.0
+pytest==9.2.0
+hypothesis==6.170.15

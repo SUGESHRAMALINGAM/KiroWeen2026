@@ -8,7 +8,7 @@ sys.path.insert(0, str(ROOT))
 import pandas as pd
 import streamlit as st
 
-from core.connectors import CsvConnector
+from core.connectors import CsvConnector, QueryTimeout
 from core.profiler import profile_table
 from core.rules import ZOMBIE_LABELS, Link, Zombie, find_infections
 from core.connectors import quote_ident
@@ -28,6 +28,7 @@ SAMPLE_LINKS = [
     Link("orders", "customer_id", "customers", "customer_id"),
     Link("orders", "product_id", "products", "product_id"),
 ]
+QUERY_TIMEOUT_S = 10
 KIND_LABELS = {"not_null": "No blanks", "unique": "No repeats", "accepted_values": "Allowed values",
                "range": "Normal range", "referential_integrity": "Links exist", "custom": "Your check"}
 
@@ -47,6 +48,7 @@ def load_connector(sources: list[tuple[str, bytes | Path]]) -> tuple[CsvConnecto
             path = Path(d) / name
             path.write_bytes(src if isinstance(src, bytes) else Path(src).read_bytes())
             results.append(con.load_csv(path))
+    con.lock(timeout_s=QUERY_TIMEOUT_S)  # public app: no file access after loading, slow queries stopped
     return con, results
 
 
@@ -149,8 +151,13 @@ with st.sidebar.expander("Links between tables"):
             st.rerun()
 
 # ---------------------------------------------------------------- analysis
-profile = profile_table(con, table, key_cols or None)
-report = find_infections(con, table, key_cols or None, st.session_state["links"], profile)
+try:
+    profile = profile_table(con, table, key_cols or None)
+    report = find_infections(con, table, key_cols or None, st.session_state["links"], profile)
+except QueryTimeout:
+    st.error(f"This table is too big to check here: it took longer than {QUERY_TIMEOUT_S} seconds. "
+             "Try a smaller file, or run the app on your own computer.")
+    st.stop()
 counts = report.counts_by_zombie()
 by_key = {z.value: n for z, n in counts.items()}
 attack = report.percent >= threshold and report.infected_rows > 0

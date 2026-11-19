@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -9,6 +10,18 @@ import duckdb
 import pandas as pd
 
 from .base import Column, Connector, quote_ident
+
+# Applied by CsvConnector.lock() once all files are loaded. lock_configuration must be last.
+LOCK_SETTINGS = (
+    "SET enable_external_access = false",
+    "SET memory_limit = '512MB'",
+    "SET threads = 2",
+    "SET lock_configuration = true",
+)
+
+
+class QueryTimeout(RuntimeError):
+    """A query ran longer than the connector's time limit and was stopped."""
 
 
 @dataclass(frozen=True)
@@ -38,6 +51,7 @@ class CsvConnector(Connector):
     def __init__(self) -> None:
         self._con = duckdb.connect(":memory:")
         self._rejects: dict[str, list[RejectedRow]] = {}
+        self._timeout: float | None = None
 
     def _exec(self, sql: str, params: list | None = None):
         """Run SQL on a fresh cursor. Streamlit calls us from several threads, and one DuckDB
@@ -48,6 +62,20 @@ class CsvConnector(Connector):
     def cursor(self):
         """A fresh DuckDB cursor on the same database (used by core.sandbox)."""
         return self._con.cursor()
+
+    def lock(self, timeout_s: float | None = None) -> None:
+        """Lock the database for public use. Call after all CSVs are loaded: afterwards DuckDB cannot read
+        or write files or URLs, memory and threads are capped, and settings cannot be changed back.
+        With `timeout_s`, every query() is stopped after that many seconds."""
+        cur = self._con.cursor()
+        for s in LOCK_SETTINGS:
+            cur.execute(s)
+        self._timeout = timeout_s
+
+    @property
+    def locked(self) -> bool:
+        cur = self._con.cursor()
+        return cur.execute("SELECT current_setting('lock_configuration')").fetchone()[0] in (True, "true")
 
     def load_csv(self, path: str | Path, name: str | None = None) -> LoadResult:
         """Load a CSV as a table. Rows DuckDB cannot parse are reported, not dropped silently."""
@@ -130,7 +158,17 @@ class CsvConnector(Connector):
         return self._exec(f"SELECT * FROM {quote_ident(table)} LIMIT {int(n)}").fetchdf()
 
     def query(self, sql: str) -> pd.DataFrame:
-        return self._exec(sql).fetchdf()
+        if self._timeout is None:
+            return self._exec(sql).fetchdf()
+        cur = self._con.cursor()
+        timer = threading.Timer(self._timeout, cur.interrupt)
+        timer.start()
+        try:
+            return cur.execute(sql).fetchdf()
+        except duckdb.InterruptException:
+            raise QueryTimeout(f"The query took longer than {self._timeout:g} seconds and was stopped.") from None
+        finally:
+            timer.cancel()
 
 
 def _lit(s: str) -> str:
