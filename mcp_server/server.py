@@ -27,7 +27,10 @@ TIMEOUT_S = 30
 
 
 def profile_csv(path: str, key_columns: list[str] | None = None) -> dict:
-    """Profile a local CSV file: infection score, zombie counts and findings with example rows."""
+    """Profile ONE local CSV file: infection score, zombie counts and findings with example rows.
+    key_columns (optional) are columns that should identify a row; they are used to find repeated keys.
+    Lost zombies (broken links) need two tables, so they are never checked here: use the Zombie Hunter
+    app with several files for that."""
     p = Path(path).expanduser()
     if p.suffix.lower() != ".csv":
         return {"error": "Only .csv files can be profiled."}

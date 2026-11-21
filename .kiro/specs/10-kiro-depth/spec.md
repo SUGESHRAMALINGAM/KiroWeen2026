@@ -9,8 +9,10 @@ Requirements: FR-23, FR-24, NFR-07, NFR-02.
 - Tests: `tests/test_mcp_server.py` (both tools, refusals, tool registration).
 
 ## Hooks (FR-23)
-- Planned: "Regenerate SQL docs" on `PostFileSave` for `\.sql$` runs `py scripts/gen_docs.py` (reads the event from stdin); "Run tests on save" on `PostFileSave` for `\.py$` runs `py -m pytest -q -x`.
-- Created with Kiro's hook tool once the `KiroWeen2026` folder is opened as the workspace, so the files land in this repo's `.kiro/hooks/`.
+- `.kiro/hooks/regenerate-sql-docs.json`: `PostFileSave`, matcher `\.sql$`, runs `py scripts/gen_docs.py`. The script reads the saved path from the hook event on stdin and writes `docs/generated/<name>.md` (git-ignored). Never runs SQL.
+- `.kiro/hooks/run-tests-on-save.json`: `PostFileSave`, matcher `\.py$`, runs `py -m pytest -q -x` (timeout 300 s).
+- Created with Kiro's hook tool and moved into this repo's `.kiro/hooks/`. They are active when the `KiroWeen2026` folder is the Kiro workspace.
+- Checked by piping a sample event into the docs script; that run found that CALL statements were listed as "tables written". Fixed: `ScriptAnalysis.procedures_called`, CALLs drawn as procedure boxes in Mermaid.
 
 ## Property-based tests (NFR-07)
 Hypothesis is used for: profiler counts vs plain Python, infected rows counted once, generated checks pass on clean data and fail on the injected defect, custom composite keys / allowed values / ranges, SQL parse -> regenerate keeps the table set, random text never crashes the analyzer.

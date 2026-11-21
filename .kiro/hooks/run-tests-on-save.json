@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Run tests on save",
+      "trigger": "PostFileSave",
+      "description": "When a Python file is saved, run the test suite (unit, Hypothesis property tests and app smoke tests) and stop at the first failure.",
+      "matcher": "\\.py$",
+      "action": {
+        "type": "command",
+        "command": "py -m pytest -q -x",
+        "timeout": 300
+      }
+    }
+  ]
+}

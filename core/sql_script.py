@@ -80,7 +80,13 @@ class ScriptAnalysis:
 
     @property
     def tables_written(self) -> list[str]:
-        return list(dict.fromkeys(s.analysis.target for s in self.all_statements if s.analysis.target))
+        return list(dict.fromkeys(s.analysis.target for s in self.all_statements
+                                  if s.analysis.target and s.analysis.statement != "CALL"))
+
+    @property
+    def procedures_called(self) -> list[str]:
+        return list(dict.fromkeys(s.analysis.target for s in self.all_statements
+                                  if s.analysis.statement == "CALL" and s.analysis.target))
 
     @property
     def problem_counts(self) -> dict[int, int]:

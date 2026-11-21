@@ -38,6 +38,12 @@ def mermaid(script: ScriptAnalysis) -> str:
     lines = ["flowchart LR"]
     for s in script.all_statements:
         a = s.analysis
+        if a.statement == "CALL":
+            if a.target:  # caller -> procedure, drawn as a sub-routine box
+                step = _node_id("s", str(s.index), ids)
+                lines.append(f"  {step}[{_label(f'{s.index}. CALL')}] --> "
+                             f"{_node_id('p', a.target, ids)}[[{_label(a.target)}]]")
+            continue
         if not a.tables and not a.target:
             continue
         step = _node_id("s", str(s.index), ids)
@@ -58,7 +64,9 @@ def _statement_section(s: StatementResult, dialect: str) -> list[str]:
     out = [f"### {s.index}. {a.statement}{where}, line {s.line}", "", f"```sql\n{s.sql.strip()}\n```", ""]
     if a.explanation:
         out += ["**What it does**", ""] + [f"{n}. {step}" for n, step in enumerate(a.explanation, 1)] + [""]
-    if a.tables or a.target:
+    if a.statement == "CALL":
+        out += [f"- Runs procedure: `{a.target}`", ""]
+    elif a.tables or a.target:
         out += [f"- Reads: {', '.join(f'`{t}`' for t in a.tables) or '-'}",
                 f"- Writes: {f'`{a.target}`' if a.target else '-'}", ""]
     if a.issues:
@@ -89,6 +97,7 @@ def script_doc(script: ScriptAnalysis, title: str = "SQL documentation") -> str:
              f"- Stored procedures / functions: {len(script.procedures)}",
              f"- Tables read: {', '.join(f'`{t}`' for t in script.tables_read) or '-'}",
              f"- Tables written: {', '.join(f'`{t}`' for t in script.tables_written) or '-'}",
+             f"- Procedures called: {', '.join(f'`{p}`' for p in script.procedures_called) or '-'}",
              f"- Possible problems: {problems}",
              f"- Syntax problems: {len(script.syntax_problems)}", "",
              "## Data flow", "", "```mermaid", mermaid(script), "```", ""]

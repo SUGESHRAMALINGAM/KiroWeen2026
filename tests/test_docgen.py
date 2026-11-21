@@ -62,3 +62,12 @@ def test_cli_reads_hook_event_and_skips_non_sql(tmp_path):
     r = subprocess.run([sys.executable, str(ROOT / "scripts" / "gen_docs.py"), str(tmp_path / "notes.txt")],
                        capture_output=True, text=True)
     assert r.returncode == 1 and "not a .sql file" in r.stderr
+
+
+def test_calls_are_not_counted_as_tables_written():
+    script = analyze_script((FIX / "mysql_procs.sql").read_text(encoding="utf-8"), "mysql")
+    assert script.tables_written == ["customers", "orders"]
+    assert script.procedures_called == ["AddCustomer", "GetCustomerOrders", "UpdateOrderAmount", "DeleteCustomer"]
+    doc = script_doc(script)
+    assert "Procedures called: `AddCustomer`" in doc and "Runs procedure: `AddCustomer`" in doc
+    assert "[[" in mermaid(script)  # procedures drawn as sub-routine boxes

@@ -19,7 +19,7 @@ Each item is ticked when it is done.
 - [x] 3. Docs download (BRD Task 8, FR-19): Markdown + Mermaid diagram from SQL Autopsy, plus a command-line script
 - [x] 4. MCP server (FR-24): tools `profile_csv` and `analyze_sql`, with config added but switched off until you approve
 - [x] 5. Specs + README updated, full test run
-- [ ] 6. Kiro hooks (FR-23): needs you to open the `KiroWeen2026` folder as the workspace first (see notes)
+- [x] 6. Kiro hooks (FR-23): regenerate SQL docs on .sql save, run tests on .py save
 
 ## Cut on purpose
 - Task 9: rewrite verification + HR / Finance / Marketing packs (the plan says cut this first)
@@ -29,7 +29,10 @@ Each item is ticked when it is done.
 - [x] Pushed to GitHub, CI green
 - [x] Both apps deployed on Streamlit Community Cloud (links in README)
 - [x] README has the live links
-- [ ] Demo video (under 3 minutes) and Devpost write-up
+- [x] GitHub shows the MIT license (checked through the GitHub API)
+- [x] Devpost description and Kiro write-up drafted in `docs/SUBMISSION.md`
+- [ ] Waiting for your OK: turn on the MCP server (`"disabled": false`) and push these changes
+- [ ] Last: demo video (under 3 minutes, public on YouTube), blog / social post, submit on Devpost
 
 ## Future
 - Databricks / BigQuery connectors through the same `Connector` interface

@@ -1,0 +1,16 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "Regenerate SQL docs on save",
+      "trigger": "PostFileSave",
+      "description": "When a .sql file is saved, write Markdown docs (summary, Mermaid data flow, every statement explained) to docs/generated/. Reads the saved file path from the hook event on stdin. Never runs SQL.",
+      "matcher": "\\.sql$",
+      "action": {
+        "type": "command",
+        "command": "py scripts/gen_docs.py",
+        "timeout": 60
+      }
+    }
+  ]
+}

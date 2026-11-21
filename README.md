@@ -54,6 +54,7 @@ On Windows without Python on PATH, put `py -m` in front (for example `py -m stre
 ## Kiro
 
 - **Specs:** one per task in `.kiro/specs/`. **Steering:** `.kiro/steering/` (product, tech, structure).
+- **Hooks:** `.kiro/hooks/regenerate-sql-docs.json` writes Markdown docs to `docs/generated/` whenever a `.sql` file is saved; `.kiro/hooks/run-tests-on-save.json` runs the test suite whenever a `.py` file is saved. Both run locally only.
 - **MCP server:** `mcp_server/server.py` with tools `profile_csv` and `analyze_sql`, registered in `.kiro/settings/mcp.json`. It ships switched off (`"disabled": true`); set it to `false` to let Kiro call it. It runs locally over stdio and never executes SQL.
 - **Property-based tests:** Hypothesis checks the profiler, the generated checks, custom rules and the SQL parser against plain Python.
 

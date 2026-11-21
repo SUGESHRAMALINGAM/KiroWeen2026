@@ -4,7 +4,7 @@
       "command": "py",
       "args": ["mcp_server/server.py"],
       "env": {},
-      "disabled": true,
+      "disabled": false,
       "autoApprove": []
     }
   }
