@@ -5,7 +5,16 @@ A data engineer's AI teammate for Kiroween 2026 (Skeleton Crew). One shared core
 - **Zombie Hunter**: profile CSVs, find data "zombies", generate and run checks.
 - **SQL Autopsy**: explain, lint and trace lineage for SQL files and stored procedures, check them against real tables, and download ETL docs.
 
-Status: all planned features are built (see `TODO.md`). Live links come after deployment.
+## Try it live
+
+| App | Link | Try this first |
+|---|---|---|
+| 🧟 **Zombie Hunter** | https://kiroween2026-fsqlxmp9dlwwrha8xvwnyt.streamlit.app/ | Click **Try: Retail outbreak (demo)**, then open the **Checks** tab |
+| 🔬 **SQL Autopsy** | https://kiroween2026-d3dcbdpbbzchwua4go7kz4.streamlit.app/ | Click **Load example**, then **Use retail sample**, then **Try it on your tables** |
+
+No login and no install. If an app says it is sleeping, click **Wake up** and wait about 30 seconds.
+
+Status: all planned features are built and deployed (see `TODO.md`).
 
 ## Run
 

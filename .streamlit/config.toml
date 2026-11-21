@@ -5,5 +5,9 @@ backgroundColor = "#120d1a"
 secondaryBackgroundColor = "#1c1527"
 textColor = "#ece8d8"
 
+[server]
+# Free hosting has limited memory; matches the 50 MB limit in core/sandbox.py.
+maxUploadSize = 50
+
 [browser]
 gatherUsageStats = false

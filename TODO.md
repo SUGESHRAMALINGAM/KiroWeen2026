@@ -26,9 +26,10 @@ Each item is ticked when it is done.
 - Optional LLM wording (the plan says cut it; the app works without a key)
 
 ## Final (after the list above)
-- [ ] You push to GitHub (I give the exact commands, you run them)
-- [ ] You deploy both apps on Streamlit Community Cloud
-- [ ] README gets the live links, then demo video and Devpost write-up
+- [x] Pushed to GitHub, CI green
+- [x] Both apps deployed on Streamlit Community Cloud (links in README)
+- [x] README has the live links
+- [ ] Demo video (under 3 minutes) and Devpost write-up
 
 ## Future
 - Databricks / BigQuery connectors through the same `Connector` interface
